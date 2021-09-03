@@ -1,7 +1,15 @@
+'''Main Telegram Bot'''
+import os
+import re
+import requests
+from dotenv import load_dotenv
 from telegram.ext import Updater, InlineQueryHandler, CommandHandler
 from telegram.ext.dispatcher import run_async
-import requests
-import re
+
+
+# Load environment variables
+load_dotenv()
+API_KEY = os.getenv('API_KEY')
 
 def get_url():
     contents = requests.get('https://random.dog/woof.json').json()
@@ -17,15 +25,15 @@ def get_image_url():
     return url
 
 @run_async
-def bop(update, context):
+def boop(update, context):
     url = get_image_url()
     chat_id = update.message.chat_id
     context.bot.send_photo(chat_id=chat_id, photo=url)
 
 def main():
-    updater = Updater('YOUR_TOKEN', use_context=True)
+    updater = Updater(API_KEY, use_context=True)
     dp = updater.dispatcher
-    dp.add_handler(CommandHandler('bop',bop))
+    dp.add_handler(CommandHandler('boop',boop))
     updater.start_polling()
     updater.idle()
 
